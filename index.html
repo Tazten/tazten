@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tazten - GitHub + Vercel 测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #10b981;
+            color: white;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        .info {
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .info-item {
+            margin: 10px 0;
+            color: #666;
+        }
+        
+        .info-item strong {
+            color: #333;
+        }
+        
+        .timestamp {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        
+        .links {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .link.github {
+            background: #24292e;
+        }
+        
+        .link.vercel {
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Tazten</h1>
+        <div class="status">✅ 部署成功</div>
+        
+        <div class="info">
+            <div class="info-item">
+                <strong>部署平台:</strong> Vercel
+            </div>
+            <div class="info-item">
+                <strong>代码仓库:</strong> GitHub
+            </div>
+            <div class="info-item">
+                <strong>部署时间:</strong> <span id="deployTime"></span>
+            </div>
+            <div class="info-item">
+                <strong>访问地址:</strong> <span id="currentUrl"></span>
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="https://github.com/Tazten/tazten" class="link github" target="_blank">
+                📦 GitHub 仓库
+            </a>
+            <a href="https://vercel.com" class="link vercel" target="_blank">
+                ▲ Vercel 平台
+            </a>
+        </div>
+        
+        <div class="timestamp">
+            <p>如果你能看到这个页面，说明 GitHub → Vercel 自动部署链条工作正常！</p>
+            <p>页面加载时间: <span id="loadTime"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // 显示当前时间
+        const now = new Date();
+        document.getElementById('deployTime').textContent = now.toLocaleString('zh-CN');
+        
+        // 显示当前 URL
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        // 显示页面加载时间
+        window.addEventListener('load', () => {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            document.getElementById('loadTime').textContent = (loadTime / 1000).toFixed(2) + ' 秒';
+        });
+    </script>
+</body>
+</html>
+
