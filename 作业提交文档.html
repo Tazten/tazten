@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无感记账 - 进阶作业提交</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            color: #555;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .info-card {
+            background: #f9fafb;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .info-card p {
+            margin: 10px 0;
+        }
+
+        .info-card ul, .info-card ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .info-card li {
+            margin: 8px 0;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .service-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .service-card .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .service-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 15px 0;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .flow-step::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 20px;
+            top: 25px;
+            width: 32px;
+            height: 32px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .flow-container {
+            counter-reset: step-counter;
+        }
+
+        .url-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 15px 15px 15px 0;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .url-link:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box strong {
+            color: #d97706;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box::before {
+            content: '✅ ';
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        table th,
+        table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 40px;
+            text-align: center;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 无感记账</h1>
+            <div class="subtitle">进阶作业：从想法到可用的产品</div>
+        </div>
+
+        <div class="content">
+            <!-- 产品介绍 -->
+            <div class="section">
+                <h2 class="section-title">一、产品是什么？</h2>
+                
+                <div class="info-card">
+                    <h3>🎯 产品定位</h3>
+                    <p><strong>无感记账</strong>是一款智能账单识别应用，用户只需上传账单图片，AI 会自动识别并记录每一笔消费，让记账变得简单无感。</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>💡 解决什么问题？</h3>
+                    <ul>
+                        <li>传统记账需要手动输入金额、分类、时间等信息，操作繁琐</li>
+                        <li>消费后容易忘记记录，导致账目不完整</li>
+                        <li>用户不知道如何正确分类消费</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>我们的解决方案</strong>：拍照上传 → AI 自动识别 → 自动分类 → 自动保存，整个过程只需几秒钟。</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>🌐 产品公网地址</h3>
+                    <p>部署完成后，请在此处填写你的 Vercel 部署地址：</p>
+                    <div style="background: #f3f4f6; border: 2px dashed #d1d5db; padding: 30px; text-align: center; border-radius: 8px; margin: 15px 0; color: #6b7280;">
+                        <p style="font-size: 18px; margin-bottom: 10px;">📝 <strong>待填写</strong></p>
+                        <p style="font-size: 14px;">例如：https://tazten-bill-recognition.vercel.app</p>
+                    </div>
+                    <a href="#" class="url-link" target="_blank">访问产品 →</a>
+                    <span style="color: #6b7280; font-size: 14px; margin-left: 10px;">（部署后更新链接）</span>
+                </div>
+            </div>
+
+            <!-- 使用的服务 -->
+            <div class="section">
+                <h2 class="section-title">二、使用了哪些服务？</h2>
+                
+                <p style="margin-bottom: 20px; color: #666;">为了让产品能够运行，我使用了以下服务和工具：</p>
+
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="icon">🤖</div>
+                        <h4>Cursor AI</h4>
+                        <p>AI 编程助手，帮助我写代码、调试问题、优化功能。整个项目的大部分代码都是在 Cursor 的帮助下完成的。</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="icon">🗄️</div>
+                        <h4>Supabase</h4>
+                        <p>数据库和文件存储服务。用来存储用户的交易记录，以及上传的账单图片。</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="icon">🚀</div>
+                        <h4>Vercel</h4>
+                        <p>网站托管和部署服务。把我的代码自动部署到公网，让任何人都可以访问。</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="icon">🧠</div>
+                        <h4>火山引擎豆包 API</h4>
+                        <p>AI 视觉理解服务。用来识别账单图片中的文字和信息，提取金额、商户、分类等数据。</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="icon">📦</div>
+                        <h4>Next.js</h4>
+                        <p>前端框架。用来构建用户界面和处理用户操作。</p>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="icon">📊</div>
+                        <h4>Google Analytics</h4>
+                        <p>数据分析服务。用来追踪用户行为，了解用户如何使用产品。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 开发流程 -->
+            <div class="section">
+                <h2 class="section-title">三、整个开发流程是怎样的？</h2>
+
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第一步：产品设计</h3>
+                        <p>在开始写代码之前，我先想清楚了产品要解决什么问题、用户如何使用、需要哪些功能。这就像盖房子前先画图纸一样重要。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第二步：搭建项目框架</h3>
+                        <p>使用 <strong>Cursor AI</strong> 帮助我创建 Next.js 项目，设置好基本的文件结构和配置。这就像搭好了房子的框架。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第三步：连接数据库（Supabase）</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>在 Supabase 官网创建了一个项目</li>
+                            <li>创建了数据库表（用来存储交易记录）</li>
+                            <li>创建了存储桶（用来存放上传的图片）</li>
+                            <li>获取了 API 密钥，配置到项目中</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>为什么需要：</strong>产品需要保存数据，就像手机需要存储空间一样，Supabase 就是我的"云存储"。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第四步：对接 AI 识别服务（豆包 API）</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>在火山引擎控制台开通了豆包视觉理解服务</li>
+                            <li>获取了 API 密钥和模型端点</li>
+                            <li>编写代码调用 API，把图片发送给 AI</li>
+                            <li>解析 AI 返回的结果，提取账单信息</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>为什么需要：</strong>这是产品的核心功能，AI 负责"看懂"账单图片，提取关键信息。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第五步：开发前端界面</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>使用 <strong>Cursor AI</strong> 帮助编写 React 组件</li>
+                            <li>创建了上传页面（用户可以上传图片）</li>
+                            <li>创建了历史记录页面（用户可以查看所有记录）</li>
+                            <li>创建了详情页面（用户可以查看单条记录的详细信息）</li>
+                            <li>设计了美观的界面，使用了渐变、卡片等现代设计元素</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>为什么需要：</strong>用户需要一个友好的界面来使用产品，就像手机需要屏幕一样。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第六步：开发后端逻辑</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>创建了 API 接口，接收用户上传的图片</li>
+                            <li>编写代码把图片上传到 Supabase 存储</li>
+                            <li>调用豆包 API 识别图片内容</li>
+                            <li>验证识别结果，确保数据正确</li>
+                            <li>把识别结果保存到数据库</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>为什么需要：</strong>前端负责展示，后端负责处理业务逻辑，就像餐厅的前台和厨房一样。</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第七步：测试和优化</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>在本地测试所有功能是否正常</li>
+                            <li>修复发现的问题和错误</li>
+                            <li>优化用户体验（比如添加加载提示、错误提示）</li>
+                            <li>确保手机端也能正常使用</li>
+                        </ul>
+                    </div>
+
+                    <div class="flow-step">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">第八步：部署到公网（Vercel）</h3>
+                        <p>
+                            <strong>做了什么：</strong>
+                        </p>
+                        <ul>
+                            <li>把代码推送到 GitHub</li>
+                            <li>在 Vercel 中连接 GitHub 仓库</li>
+                            <li>配置环境变量（数据库密钥、API 密钥等）</li>
+                            <li>Vercel 自动构建和部署</li>
+                            <li>获得公网访问地址</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>为什么需要：</strong>只有部署到公网，其他人才能访问你的产品。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 核心功能流程 -->
+            <div class="section">
+                <h2 class="section-title">四、用户如何使用产品？</h2>
+
+                <div class="info-card">
+                    <h3>🔄 完整使用流程</h3>
+                    <ol>
+                        <li><strong>访问网站</strong>：用户在浏览器中打开产品地址</li>
+                        <li><strong>上传图片</strong>：点击或拖拽上传账单图片（支持 JPG、PNG 格式）</li>
+                        <li><strong>AI 识别</strong>：系统自动调用 AI 识别图片内容（约 30 秒）</li>
+                        <li><strong>自动保存</strong>：识别结果自动保存到数据库</li>
+                        <li><strong>查看结果</strong>：用户可以查看历史记录，或点击查看详情</li>
+                    </ol>
+                </div>
+
+                <div class="info-card">
+                    <h3>✨ 核心功能</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>📤 图片上传</td>
+                                <td>支持点击上传或拖拽上传，自动验证文件格式和大小</td>
+                            </tr>
+                            <tr>
+                                <td>🤖 AI 识别</td>
+                                <td>自动识别账单中的金额、商户、分类、时间等信息</td>
+                            </tr>
+                            <tr>
+                                <td>📋 历史记录</td>
+                                <td>查看所有交易记录，支持按类型筛选（支出/收入）</td>
+                            </tr>
+                            <tr>
+                                <td>🔍 详情查看</td>
+                                <td>查看单条记录的完整信息，包括原始图片和识别结果</td>
+                            </tr>
+                            <tr>
+                                <td>📊 数据统计</td>
+                                <td>自动统计总记录数、总支出、总收入</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 技术实现概览 -->
+            <div class="section">
+                <h2 class="section-title">五、技术实现概览</h2>
+
+                <div class="info-card">
+                    <h3>📁 项目结构（简化说明）</h3>
+                    <p>项目就像一本书，有不同的章节：</p>
+                    <ul>
+                        <li><strong>app/</strong>：存放页面和 API 接口（就像书的正文）</li>
+                        <li><strong>components/</strong>：存放可复用的组件（就像书的插图，可以在多处使用）</li>
+                        <li><strong>lib/</strong>：存放工具函数（就像书的附录，提供辅助功能）</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔄 数据流转过程</h3>
+                    <p>当用户上传一张图片时，数据是这样流动的：</p>
+                    <ol>
+                        <li><strong>用户上传</strong> → 图片从用户的电脑发送到服务器</li>
+                        <li><strong>存储图片</strong> → 服务器把图片保存到 Supabase 存储</li>
+                        <li><strong>调用 AI</strong> → 服务器把图片地址发送给豆包 API</li>
+                        <li><strong>AI 识别</strong> → 豆包 API 分析图片，返回识别结果</li>
+                        <li><strong>保存数据</strong> → 服务器把识别结果保存到 Supabase 数据库</li>
+                        <li><strong>显示结果</strong> → 前端从数据库读取数据，展示给用户</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>💡 关键理解：</strong></p>
+                    <p>整个产品就像一个"智能助手"：</p>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>前端</strong>：负责和用户交互（就像助手的"脸"）</li>
+                        <li><strong>后端</strong>：负责处理业务逻辑（就像助手的"大脑"）</li>
+                        <li><strong>数据库</strong>：负责存储数据（就像助手的"记忆"）</li>
+                        <li><strong>AI 服务</strong>：负责识别图片（就像助手的"眼睛"）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 成果展示 -->
+            <div class="section">
+                <h2 class="section-title">六、最终成果</h2>
+
+                <div class="success-box">
+                    <strong>✅ 完成情况</strong>
+                    <ul style="margin-top: 15px; margin-left: 25px;">
+                        <li>✅ 产品可以正常访问（公网地址）</li>
+                        <li>✅ 用户可以上传图片并识别</li>
+                        <li>✅ 数据可以正常保存和查询</li>
+                        <li>✅ 核心流程完整可用</li>
+                        <li>✅ 界面美观，体验流畅</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📸 产品截图区域</h3>
+                    <p>请在此处插入产品截图：</p>
+                    <div style="background: #f3f4f6; border: 2px dashed #d1d5db; padding: 40px; text-align: center; border-radius: 8px; margin: 15px 0; color: #6b7280;">
+                        <p style="font-size: 16px; margin-bottom: 10px;">📸 <strong>请插入产品首页截图</strong></p>
+                        <p style="font-size: 14px;">建议：展示上传页面和历史记录页面</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="section">
+                <h2 class="section-title">七、总结</h2>
+
+                <div class="info-card">
+                    <h3>🎯 从想法到产品的关键步骤</h3>
+                    <ol>
+                        <li><strong>想清楚</strong>：明确产品要解决什么问题</li>
+                        <li><strong>选工具</strong>：选择合适的服务和框架</li>
+                        <li><strong>搭框架</strong>：创建项目基础结构</li>
+                        <li><strong>连服务</strong>：连接数据库、AI 服务等</li>
+                        <li><strong>写功能</strong>：实现核心功能</li>
+                        <li><strong>测体验</strong>：确保用户能顺畅使用</li>
+                        <li><strong>上公网</strong>：部署让所有人都能访问</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>💡 关键收获：</strong></p>
+                    <p>这个项目让我理解了：</p>
+                    <ul style="margin-top: 10px;">
+                        <li>如何把想法变成真正可用的产品</li>
+                        <li>如何整合不同的服务（数据库、AI、存储等）</li>
+                        <li>如何让用户能够顺畅地使用产品</li>
+                        <li>如何部署产品让所有人都能访问</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>无感记账</strong> - 从想法到产品的完整实践</p>
+            <p style="margin-top: 10px; font-size: 14px;">开发者：Tazten | 课程：从 Website 开始构建一款应用产品</p>
+        </div>
+    </div>
+</body>
+</html>
