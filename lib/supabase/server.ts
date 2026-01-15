@@ -9,4 +9,3 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 // 服务端客户端，使用 service role key（绕过 RLS）
 export const supabaseServer = createClient(supabaseUrl, supabaseServiceKey)
-

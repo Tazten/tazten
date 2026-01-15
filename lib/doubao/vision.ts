@@ -185,4 +185,3 @@ export async function parseBillImage(imageUrl: string): Promise<DoubaoVisionResp
     throw error
   }
 }
-

@@ -26,4 +26,3 @@
     "verify:supabase": "tsx scripts/verify-supabase.ts"
   }
 }
-

@@ -104,4 +104,3 @@ export function validateCategory(category: string | null, subcategory: string | 
   
   return true
 }
-
