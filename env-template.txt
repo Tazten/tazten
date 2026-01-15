@@ -1,0 +1,28 @@
+# Supabase 配置
+# 在 Supabase Dashboard (https://app.supabase.com) → Settings → API 中获取
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# 火山引擎 TOS 配置
+# 在火山引擎控制台 (https://console.volcengine.com/tos) 中获取
+TOS_ACCESS_KEY=your-tos-access-key
+TOS_SECRET_KEY=your-tos-secret-key
+TOS_ENDPOINT=tos-cn-beijing.volces.com
+TOS_REGION=cn-beijing
+TOS_BUCKET_NAME=tazten
+
+# 火山引擎豆包视觉理解 API
+# 在火山引擎控制台开通服务后获取
+# 注意：可以使用 ARK_API_KEY 或 DOUBAO_API_KEY（优先使用 ARK_API_KEY）
+ARK_API_KEY=your-ark-api-key
+# 或者使用
+# DOUBAO_API_KEY=your-doubao-api-key
+
+# Endpoint ID（你的模型端点）
+DOUBAO_MODEL_ENDPOINT=ep-20260115161308-w22bh
+# 或者使用
+# ARK_MODEL_ENDPOINT=ep-20260115161308-w22bh
+
+# 注意：BASE_URL 已硬编码为 https://ark.cn-beijing.volces.com/api/v3，无需配置
+

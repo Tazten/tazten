@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账单识别 - 上传</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    /* 流程可视化 */
+    .process-flow {
+      margin-bottom: 40px;
+    }
+
+    .process-flow h2 {
+      font-size: 20px;
+      margin-bottom: 24px;
+      color: #333;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e0e0e0;
+      z-index: 0;
+    }
+
+    .step {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: #999;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+    }
+
+    .step.active .step-circle {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .step.success .step-circle {
+      border-color: #10b981;
+      background: #10b981;
+      color: white;
+    }
+
+    .step.failed .step-circle {
+      border-color: #ef4444;
+      background: #ef4444;
+      color: white;
+    }
+
+    .step-label {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      max-width: 100px;
+      margin-top: 4px;
+    }
+
+    .step.active .step-label {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .step.success .step-label {
+      color: #10b981;
+    }
+
+    .step.failed .step-label {
+      color: #ef4444;
+    }
+
+    .step-duration {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    /* 上传表单 */
+    .upload-section {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 30px;
+      border: 2px dashed #d1d5db;
+      transition: all 0.3s ease;
+    }
+
+    .upload-section.dragover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .upload-area {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: #667eea;
+    }
+
+    .upload-text {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .upload-hint {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #666;
+      margin-left: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    /* 预览区域 */
+    .preview-section {
+      margin-top: 30px;
+      display: none;
+    }
+
+    .preview-section.show {
+      display: block;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-preview {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .result-preview h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .result-item {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 3px solid #667eea;
+    }
+
+    .result-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .result-value.amount {
+      color: #10b981;
+      font-size: 18px;
+    }
+
+    .result-value.expense {
+      color: #ef4444;
+    }
+
+    .result-value.income {
+      color: #10b981;
+    }
+
+    .confidence-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .confidence-high {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .confidence-low {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .nav-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📄 账单识别系统</h1>
+      <p>上传账单图片，自动识别并入库</p>
+    </div>
+
+    <div class="content">
+      <!-- 流程可视化 -->
+      <div class="process-flow">
+        <h2>处理流程</h2>
+        <div class="steps" id="steps">
+          <div class="step" data-step="upload">
+            <div class="step-circle">1</div>
+            <div class="step-label">上传图片</div>
+            <div class="step-duration" id="duration-upload"></div>
+          </div>
+          <div class="step" data-step="parse">
+            <div class="step-circle">2</div>
+            <div class="step-label">解析识别</div>
+            <div class="step-duration" id="duration-parse"></div>
+          </div>
+          <div class="step" data-step="validate">
+            <div class="step-circle">3</div>
+            <div class="step-label">结构化</div>
+            <div class="step-duration" id="duration-validate"></div>
+          </div>
+          <div class="step" data-step="save">
+            <div class="step-circle">4</div>
+            <div class="step-label">入库</div>
+            <div class="step-duration" id="duration-save"></div>
+          </div>
+          <div class="step" data-step="display">
+            <div class="step-circle">5</div>
+            <div class="step-label">展示</div>
+            <div class="step-duration" id="duration-display"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 上传区域 -->
+      <div class="upload-section" id="uploadSection">
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📤</div>
+          <div class="upload-text">点击或拖拽上传账单图片</div>
+          <div class="upload-hint">支持 JPG、PNG 格式，最大 10MB</div>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg" />
+          <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+        </div>
+      </div>
+
+      <!-- 预览区域 -->
+      <div class="preview-section" id="previewSection">
+        <img id="previewImage" class="preview-image" alt="预览" />
+        <div style="text-align: center;">
+          <button class="btn btn-primary" id="submitBtn">开始识别</button>
+          <button class="btn btn-secondary" id="cancelBtn">取消</button>
+        </div>
+      </div>
+
+      <!-- 错误提示 -->
+      <div class="error-message" id="errorMessage"></div>
+
+      <!-- 结果预览 -->
+      <div class="result-preview" id="resultPreview" style="display: none;">
+        <h3>识别结果预览</h3>
+        <div class="result-grid" id="resultGrid"></div>
+        <div style="margin-top: 20px; text-align: center;">
+          <a href="transactions.html" class="nav-link">查看所有记录 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    const uploadSection = document.getElementById('uploadSection');
+    const previewSection = document.getElementById('previewSection');
+    const previewImage = document.getElementById('previewImage');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const resultPreview = document.getElementById('resultPreview');
+    const resultGrid = document.getElementById('resultGrid');
+    const steps = document.querySelectorAll('.step');
+
+    let selectedFile = null;
+    let stepTimers = {};
+
+    // 上传按钮点击
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // 文件选择
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+    });
+
+    // 拖拽上传
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleFileSelect(file);
+      }
+    });
+
+    // 处理文件选择
+    function handleFileSelect(file) {
+      if (!file.type.match('image.*')) {
+        showError('请选择图片文件');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showError('文件大小不能超过 10MB');
+        return;
+      }
+
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewSection.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 取消按钮
+    cancelBtn.addEventListener('click', () => {
+      selectedFile = null;
+      fileInput.value = '';
+      previewSection.classList.remove('show');
+      resultPreview.style.display = 'none';
+      resetSteps();
+    });
+
+    // 提交按钮
+    submitBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+
+      resetSteps();
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '处理中<span class="loading"></span>';
+      hideError();
+
+      try {
+        // 模拟处理流程
+        await simulateProcess();
+      } catch (error) {
+        showError('处理失败：' + error.message);
+        resetSteps();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '开始识别';
+      }
+    });
+
+    // 模拟处理流程（用于演示）
+    async function simulateProcess() {
+      // 步骤1: 上传
+      updateStep('upload', 'active');
+      await delay(800);
+      updateStep('upload', 'success');
+      recordDuration('upload', 800);
+
+      // 步骤2: 解析
+      updateStep('parse', 'active');
+      await delay(1500);
+      updateStep('parse', 'success');
+      recordDuration('parse', 1500);
+
+      // 步骤3: 结构化
+      updateStep('validate', 'active');
+      await delay(300);
+      updateStep('validate', 'success');
+      recordDuration('validate', 300);
+
+      // 步骤4: 入库
+      updateStep('save', 'active');
+      await delay(500);
+      updateStep('save', 'success');
+      recordDuration('save', 500);
+
+      // 步骤5: 展示
+      updateStep('display', 'active');
+      await delay(200);
+      updateStep('display', 'success');
+      recordDuration('display', 200);
+
+      // 显示结果预览（模拟数据）
+      showResultPreview({
+        direction: 'expense',
+        amount: 128.50,
+        currency: 'CNY',
+        merchant: '星巴克咖啡',
+        occurred_at: '2024-01-15T14:30:00Z',
+        category: '餐饮',
+        subcategory: '咖啡',
+        confidence: 0.92,
+        note: '拿铁咖啡'
+      });
+    }
+
+    // 更新步骤状态
+    function updateStep(stepName, status) {
+      const step = document.querySelector(`[data-step="${stepName}"]`);
+      if (step) {
+        step.className = `step ${status}`;
+      }
+    }
+
+    // 记录耗时
+    function recordDuration(stepName, ms) {
+      const durationEl = document.getElementById(`duration-${stepName}`);
+      if (durationEl) {
+        durationEl.textContent = `${(ms / 1000).toFixed(1)}s`;
+      }
+    }
+
+    // 重置步骤
+    function resetSteps() {
+      steps.forEach(step => {
+        step.className = 'step';
+      });
+      Object.keys(stepTimers).forEach(key => {
+        const el = document.getElementById(`duration-${key}`);
+        if (el) el.textContent = '';
+      });
+    }
+
+    // 显示结果预览
+    function showResultPreview(data) {
+      resultPreview.style.display = 'block';
+      resultGrid.innerHTML = `
+        <div class="result-item">
+          <div class="result-label">类型</div>
+          <div class="result-value ${data.direction}">
+            ${data.direction === 'expense' ? '支出' : '收入'}
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">金额</div>
+          <div class="result-value amount">
+            ${data.currency} ${data.amount.toFixed(2)}
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">商户</div>
+          <div class="result-value">${data.merchant || '未识别'}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">时间</div>
+          <div class="result-value">${data.occurred_at ? new Date(data.occurred_at).toLocaleString('zh-CN') : '未识别'}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">分类</div>
+          <div class="result-value">${data.category || '未分类'}${data.subcategory ? ' / ' + data.subcategory : ''}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">备注</div>
+          <div class="result-value">${data.note || '无'}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">置信度</div>
+          <div class="result-value">
+            ${(data.confidence * 100).toFixed(1)}%
+            <span class="confidence-badge ${data.confidence >= 0.7 ? 'confidence-high' : 'confidence-low'}">
+              ${data.confidence >= 0.7 ? '高' : '需审核'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    // 工具函数
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+    }
+
+    function hideError() {
+      errorMessage.classList.remove('show');
+    }
+  </script>
+</body>
+</html>
+

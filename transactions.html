@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账单识别 - 交易记录</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: white;
+      color: #667eea;
+    }
+
+    .btn-primary:hover {
+      background: #f0f4ff;
+      transform: translateY(-1px);
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .transaction-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .transaction-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .transaction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .transaction-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .transaction-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .transaction-icon.expense {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .transaction-icon.income {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .transaction-info {
+      flex: 1;
+    }
+
+    .transaction-merchant {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .transaction-meta {
+      font-size: 13px;
+      color: #666;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .transaction-amount {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .transaction-amount.expense {
+      color: #ef4444;
+    }
+
+    .transaction-amount.income {
+      color: #10b981;
+    }
+
+    .transaction-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .tag-category {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .tag-status {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tag-status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .tag-confidence {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state-text {
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .transaction-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .transaction-amount {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📊 交易记录</h1>
+      <div class="header-actions">
+        <a href="upload.html" class="btn btn-primary">+ 上传新账单</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- 统计卡片 -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">总记录数</div>
+          <div class="stat-value" id="totalCount">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">总支出</div>
+          <div class="stat-value" id="totalExpense">¥0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">总收入</div>
+          <div class="stat-value" id="totalIncome">¥0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">需审核</div>
+          <div class="stat-value" id="needsReview">0</div>
+        </div>
+      </div>
+
+      <!-- 筛选器 -->
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="expense">支出</button>
+        <button class="filter-btn" data-filter="income">收入</button>
+        <button class="filter-btn" data-filter="needs_review">需审核</button>
+      </div>
+
+      <!-- 交易列表 -->
+      <div class="transaction-list" id="transactionList">
+        <div class="loading">加载中...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟数据（用于演示）
+    const mockTransactions = [
+      {
+        id: '1',
+        direction: 'expense',
+        amount: 128.50,
+        currency: 'CNY',
+        merchant: '星巴克咖啡',
+        occurred_at: '2024-01-15T14:30:00Z',
+        category: '餐饮',
+        subcategory: '咖啡',
+        confidence: 0.92,
+        status: 'success',
+        image_url: '#'
+      },
+      {
+        id: '2',
+        direction: 'expense',
+        amount: 89.00,
+        currency: 'CNY',
+        merchant: '盒马鲜生',
+        occurred_at: '2024-01-14T18:20:00Z',
+        category: '购物',
+        subcategory: '生鲜',
+        confidence: 0.85,
+        status: 'success',
+        image_url: '#'
+      },
+      {
+        id: '3',
+        direction: 'income',
+        amount: 5000.00,
+        currency: 'CNY',
+        merchant: '工资',
+        occurred_at: '2024-01-10T09:00:00Z',
+        category: '收入',
+        subcategory: '工资',
+        confidence: 0.65,
+        status: 'needs_review',
+        image_url: '#'
+      },
+      {
+        id: '4',
+        direction: 'expense',
+        amount: 35.00,
+        currency: 'CNY',
+        merchant: '地铁',
+        occurred_at: '2024-01-13T08:15:00Z',
+        category: '交通',
+        subcategory: '公共交通',
+        confidence: 0.78,
+        status: 'success',
+        image_url: '#'
+      },
+      {
+        id: '5',
+        direction: 'expense',
+        amount: 268.00,
+        currency: 'CNY',
+        merchant: '海底捞',
+        occurred_at: '2024-01-12T19:45:00Z',
+        category: '餐饮',
+        subcategory: '火锅',
+        confidence: 0.88,
+        status: 'success',
+        image_url: '#'
+      }
+    ];
+
+    let currentFilter = 'all';
+    let transactions = [];
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTransactions();
+      setupFilters();
+    });
+
+    // 加载交易记录
+    function loadTransactions() {
+      // 模拟 API 调用
+      setTimeout(() => {
+        transactions = mockTransactions;
+        renderTransactions();
+        updateStats();
+      }, 500);
+    }
+
+    // 渲染交易列表
+    function renderTransactions() {
+      const listEl = document.getElementById('transactionList');
+      const filtered = filterTransactions();
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-text">暂无交易记录</div>
+            <a href="upload.html" class="btn btn-primary">上传第一张账单</a>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(tx => createTransactionCard(tx)).join('');
+      
+      // 添加点击事件
+      listEl.querySelectorAll('.transaction-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.id;
+          window.location.href = `transaction-detail.html?id=${id}`;
+        });
+      });
+    }
+
+    // 创建交易卡片
+    function createTransactionCard(tx) {
+      const icon = tx.direction === 'expense' ? '📤' : '📥';
+      const directionText = tx.direction === 'expense' ? '支出' : '收入';
+      const amountSign = tx.direction === 'expense' ? '-' : '+';
+      const date = new Date(tx.occurred_at).toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      return `
+        <div class="transaction-card" data-id="${tx.id}">
+          <div class="transaction-header">
+            <div class="transaction-main">
+              <div class="transaction-icon ${tx.direction}">${icon}</div>
+              <div class="transaction-info">
+                <div class="transaction-merchant">${tx.merchant || '未识别商户'}</div>
+                <div class="transaction-meta">
+                  <span>${directionText}</span>
+                  <span>${date}</span>
+                  ${tx.category ? `<span>${tx.category}${tx.subcategory ? ' / ' + tx.subcategory : ''}</span>` : ''}
+                </div>
+                <div class="transaction-tags">
+                  ${tx.category ? `<span class="tag tag-category">${tx.category}</span>` : ''}
+                  <span class="tag tag-status ${tx.status}">
+                    ${tx.status === 'needs_review' ? '需审核' : '已确认'}
+                  </span>
+                  <span class="tag tag-confidence">
+                    置信度 ${(tx.confidence * 100).toFixed(0)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="transaction-amount ${tx.direction}">
+              ${amountSign}${tx.currency} ${tx.amount.toFixed(2)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 筛选交易
+    function filterTransactions() {
+      if (currentFilter === 'all') {
+        return transactions;
+      }
+      if (currentFilter === 'needs_review') {
+        return transactions.filter(tx => tx.status === 'needs_review');
+      }
+      return transactions.filter(tx => tx.direction === currentFilter);
+    }
+
+    // 设置筛选器
+    function setupFilters() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderTransactions();
+        });
+      });
+    }
+
+    // 更新统计
+    function updateStats() {
+      const total = transactions.length;
+      const expense = transactions
+        .filter(tx => tx.direction === 'expense')
+        .reduce((sum, tx) => sum + tx.amount, 0);
+      const income = transactions
+        .filter(tx => tx.direction === 'income')
+        .reduce((sum, tx) => sum + tx.amount, 0);
+      const needsReview = transactions.filter(tx => tx.status === 'needs_review').length;
+
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('totalExpense').textContent = `¥${expense.toFixed(2)}`;
+      document.getElementById('totalIncome').textContent = `¥${income.toFixed(2)}`;
+      document.getElementById('needsReview').textContent = needsReview;
+    }
+  </script>
+</body>
+</html>
+

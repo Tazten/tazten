@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账单识别 - 详情</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      background: white;
+      color: #667eea;
+    }
+
+    .btn:hover {
+      background: #f0f4ff;
+      transform: translateY(-1px);
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .detail-section {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .detail-section h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
+    }
+
+    .detail-item {
+      margin-bottom: 16px;
+    }
+
+    .detail-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .detail-value.amount {
+      font-size: 28px;
+      color: #10b981;
+    }
+
+    .detail-value.expense {
+      color: #ef4444;
+    }
+
+    .detail-value.income {
+      color: #10b981;
+    }
+
+    .image-section {
+      margin-bottom: 30px;
+    }
+
+    .image-section h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .bill-image {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .bill-image:hover {
+      transform: scale(1.02);
+    }
+
+    .json-section {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 30px;
+    }
+
+    .json-section h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    .json-content {
+      background: #2d2d2d;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #d4d4d4;
+    }
+
+    .json-key {
+      color: #9cdcfe;
+    }
+
+    .json-string {
+      color: #ce9178;
+    }
+
+    .json-number {
+      color: #b5cea8;
+    }
+
+    .json-boolean {
+      color: #569cd6;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+
+    .tag-status {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tag-status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .tag-confidence {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .raw-text {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #666;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📄 交易详情</h1>
+      <a href="transactions.html" class="btn">← 返回列表</a>
+    </div>
+
+    <div class="content">
+      <div id="loading" class="loading">加载中...</div>
+      <div id="content" style="display: none;">
+        <!-- 图片区域 -->
+        <div class="image-section">
+          <h2>原始账单图片</h2>
+          <img id="billImage" class="bill-image" alt="账单图片" />
+        </div>
+
+        <!-- 详情网格 -->
+        <div class="detail-grid">
+          <div class="detail-section">
+            <h2>基本信息</h2>
+            <div class="detail-item">
+              <div class="detail-label">类型</div>
+              <div class="detail-value" id="direction"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">金额</div>
+              <div class="detail-value amount" id="amount"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">商户</div>
+              <div class="detail-value" id="merchant"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">时间</div>
+              <div class="detail-value" id="occurredAt"></div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h2>分类信息</h2>
+            <div class="detail-item">
+              <div class="detail-label">一级分类</div>
+              <div class="detail-value" id="category"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">二级分类</div>
+              <div class="detail-value" id="subcategory"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">备注</div>
+              <div class="detail-value" id="note"></div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">状态</div>
+              <div id="statusTags"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 原始文本 -->
+        <div class="detail-section">
+          <h2>识别文本</h2>
+          <div class="raw-text" id="rawText"></div>
+        </div>
+
+        <!-- JSON 数据 -->
+        <div class="json-section">
+          <h2>完整 JSON 数据</h2>
+          <div class="json-content" id="jsonContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 从 URL 获取 ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    // 模拟数据
+    const mockData = {
+      id: '1',
+      direction: 'expense',
+      amount: 128.50,
+      currency: 'CNY',
+      merchant: '星巴克咖啡',
+      occurred_at: '2024-01-15T14:30:00Z',
+      category: '餐饮',
+      subcategory: '咖啡',
+      note: '拿铁咖啡',
+      confidence: 0.92,
+      status: 'success',
+      image_url: 'https://via.placeholder.com/600x800?text=Bill+Image',
+      raw_text: '星巴克咖啡\n2024-01-15 14:30\n拿铁咖啡\n¥128.50\n支付方式：微信支付',
+      created_at: '2024-01-15T14:35:00Z'
+    };
+
+    // 加载详情
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!id) {
+        document.getElementById('loading').textContent = '缺少交易 ID';
+        return;
+      }
+
+      // 模拟 API 调用
+      setTimeout(() => {
+        loadDetail(mockData);
+      }, 500);
+    });
+
+    function loadDetail(data) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+
+      // 填充基本信息
+      document.getElementById('direction').textContent = data.direction === 'expense' ? '支出' : '收入';
+      document.getElementById('direction').className = `detail-value ${data.direction}`;
+      
+      document.getElementById('amount').textContent = `${data.currency} ${data.amount.toFixed(2)}`;
+      document.getElementById('amount').className = `detail-value amount ${data.direction}`;
+      
+      document.getElementById('merchant').textContent = data.merchant || '未识别';
+      document.getElementById('occurredAt').textContent = data.occurred_at 
+        ? new Date(data.occurred_at).toLocaleString('zh-CN')
+        : '未识别';
+      
+      document.getElementById('category').textContent = data.category || '未分类';
+      document.getElementById('subcategory').textContent = data.subcategory || '未分类';
+      document.getElementById('note').textContent = data.note || '无';
+
+      // 状态标签
+      const statusTags = `
+        <span class="tag tag-status ${data.status}">
+          ${data.status === 'needs_review' ? '需审核' : '已确认'}
+        </span>
+        <span class="tag tag-confidence">
+          置信度 ${(data.confidence * 100).toFixed(1)}%
+        </span>
+      `;
+      document.getElementById('statusTags').innerHTML = statusTags;
+
+      // 图片
+      document.getElementById('billImage').src = data.image_url;
+      document.getElementById('billImage').addEventListener('click', () => {
+        window.open(data.image_url, '_blank');
+      });
+
+      // 原始文本
+      document.getElementById('rawText').textContent = data.raw_text || '无';
+
+      // JSON 数据
+      const jsonStr = JSON.stringify(data, null, 2);
+      document.getElementById('jsonContent').innerHTML = formatJson(jsonStr);
+    }
+
+    // 格式化 JSON（简单高亮）
+    function formatJson(json) {
+      return json
+        .replace(/(".*?"):/g, '<span class="json-key">$1</span>:')
+        .replace(/: ("[^"]*")/g, ': <span class="json-string">$1</span>')
+        .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+        .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>');
+    }
+  </script>
+</body>
+</html>
+
