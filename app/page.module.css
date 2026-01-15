@@ -150,20 +150,74 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    border-radius: 12px;
+    min-height: calc(100vh - 20px);
+  }
+
   .header {
-    padding: 30px 20px;
+    padding: 24px 16px;
   }
 
   .header h1 {
-    font-size: 28px;
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .headerSubtitle {
+    font-size: 13px;
+  }
+
+  .headerMeta {
+    margin-bottom: 16px;
+  }
+
+  .headerDescription {
+    margin-bottom: 20px;
+  }
+
+  .headerDescription p {
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   .headerInfo {
     grid-template-columns: 1fr;
+    gap: 12px;
+    padding-top: 20px;
   }
 
   .infoItem {
-    padding: 10px;
+    padding: 12px;
+  }
+
+  .infoIcon {
+    font-size: 16px;
+  }
+
+  .infoLabel {
+    font-size: 11px;
+  }
+
+  .infoValue {
+    font-size: 12px;
+  }
+
+  .privacyWarning {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+  }
+
+  .tab {
+    padding: 14px 16px;
+    font-size: 15px;
+    min-width: 0;
+    flex: 1;
   }
 }
 

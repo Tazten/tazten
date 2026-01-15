@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './UploadTab.module.css'
 import { getCategoryIcon } from '@/lib/categories'
+import { trackEvent } from '@/lib/analytics'
 
 const DEFAULT_IMAGE_URL = 'https://jcphhnvbridmzdcfwzar.supabase.co/storage/v1/object/public/bill-images/1768466992294-b79b4vk.png'
 
@@ -33,6 +34,14 @@ export default function UploadTab() {
     setError(null)
     setIsSuccess(false)
     setResult(null)
+    
+    // 追踪上传图片事件
+    trackEvent('upload_image', {
+      file_type: file.type,
+      file_size: file.size,
+      file_name: file.name.substring(0, 50), // 限制长度
+    })
+    
     const reader = new FileReader()
     reader.onload = (e) => {
       setPreviewUrl(e.target?.result as string)
@@ -70,6 +79,12 @@ export default function UploadTab() {
     setSteps({})
     setIsSuccess(false)
 
+    // 追踪提交事件
+    trackEvent('click_submit', {
+      use_default: useDefault,
+      has_file: !!selectedFile,
+    })
+
     try {
       let response: Response
       
@@ -104,6 +119,16 @@ export default function UploadTab() {
       setSteps(data.steps || {})
       setIsSuccess(true)
       
+      // 追踪添加记录成功事件
+      trackEvent('add_record', {
+        direction: data.saved_record?.direction,
+        amount: data.saved_record?.amount,
+        currency: data.saved_record?.currency,
+        category: data.saved_record?.category,
+        confidence: data.saved_record?.confidence,
+        use_default: useDefault,
+      })
+      
       // 清空预览
       setSelectedFile(null)
       setPreviewUrl(null)
@@ -112,10 +137,23 @@ export default function UploadTab() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err: any) {
       setError(err.message || '处理失败')
+      
+      // 追踪失败事件
+      trackEvent('submit_failed', {
+        error: err.message || '未知错误',
+        use_default: useDefault,
+      })
     } finally {
       setIsProcessing(false)
     }
   }
+
+  // 追踪页面浏览（核心流程）
+  useEffect(() => {
+    trackEvent('page_view_core_flow', {
+      page: 'upload',
+    })
+  }, [])
 
   return (
     <div className={styles.content}>

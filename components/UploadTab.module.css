@@ -446,14 +446,178 @@
 }
 
 @media (max-width: 768px) {
+  .content {
+    padding: 20px 16px;
+  }
+
+  .processFlow {
+    margin-bottom: 24px;
+  }
+
+  .processFlow h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .steps {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .step {
+    min-width: 60px;
+    flex: 0 0 auto;
+  }
+
+  .stepCircle {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .stepLabel {
+    font-size: 11px;
+    max-width: 60px;
+  }
+
+  .stepDuration {
+    font-size: 10px;
+  }
+
+  .processingTip {
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .processingTip p {
+    font-size: 13px;
+  }
+
+  .processingNote {
+    font-size: 11px;
+  }
+
+  .uploadSection {
+    padding: 20px 16px;
+  }
+
+  .uploadIcon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .uploadText {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .uploadHint {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .previewSection {
+    margin-top: 20px;
+  }
+
+  .previewImage {
+    max-width: 100%;
+    max-height: 300px;
+    margin-bottom: 16px;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .successSection {
+    padding: 40px 16px;
+  }
+
+  .successIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .successSection h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .successSection p {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .successActions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .successActions button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .defaultImageSection {
+    margin-top: 20px;
+  }
+
+  .defaultImageCard {
+    padding: 16px;
+  }
+
   .defaultImagePreview {
     flex-direction: column;
     align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
   }
 
   .defaultImageThumb {
     width: 100%;
     max-width: 200px;
     height: auto;
+  }
+
+  .defaultImageTitle {
+    font-size: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .defaultImageData {
+    gap: 6px;
+  }
+
+  .defaultDataItem {
+    font-size: 13px;
+    justify-content: center;
+  }
+
+  .defaultDataLabel {
+    min-width: 50px;
+  }
+
+  .btnDefault {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .defaultImageHint {
+    font-size: 11px;
+    margin-top: 10px;
+  }
+
+  .errorMessage {
+    padding: 12px;
+    font-size: 13px;
+    margin-top: 16px;
   }
 }

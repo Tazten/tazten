@@ -10,4 +10,33 @@ body {
   min-height: 100vh;
   padding: 20px;
   color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* 确保按钮和输入框在移动端有足够的点击区域 */
+  button,
+  input[type="file"],
+  a {
+    min-height: 44px; /* iOS 推荐的最小点击区域 */
+    touch-action: manipulation; /* 禁用双击缩放 */
+  }
+
+  /* 防止文字选择导致的意外操作 */
+  button {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* 优化滚动 */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
 }

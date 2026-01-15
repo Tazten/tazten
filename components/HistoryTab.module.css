@@ -177,3 +177,107 @@
   font-size: 16px;
   margin-bottom: 24px;
 }
+
+@media (max-width: 768px) {
+  .content {
+    padding: 20px 16px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .statCard {
+    padding: 16px;
+  }
+
+  .statLabel {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .statValue {
+    font-size: 20px;
+  }
+
+  .filters {
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filterBtn {
+    padding: 8px 14px;
+    font-size: 13px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .transactionList {
+    gap: 12px;
+  }
+
+  .transactionCard {
+    padding: 16px;
+  }
+
+  .transactionHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .transactionMain {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .transactionIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .transactionMerchant {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .transactionMeta {
+    font-size: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .transactionTags {
+    margin-top: 8px;
+    gap: 6px;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+
+  .transactionAmount {
+    font-size: 20px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .emptyState {
+    padding: 40px 16px;
+  }
+
+  .emptyStateIcon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .emptyStateText {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}

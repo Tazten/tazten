@@ -6,6 +6,7 @@ import type { Transaction } from '@/lib/types'
 import { getCategoryIcon } from '@/lib/categories'
 import styles from './HistoryTab.module.css'
 import Link from 'next/link'
+import { trackEvent } from '@/lib/analytics'
 
 export default function HistoryTab() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -14,6 +15,10 @@ export default function HistoryTab() {
 
   useEffect(() => {
     loadTransactions()
+    // 追踪查看历史记录页面
+    trackEvent('page_view', {
+      page: 'history',
+    })
   }, [])
 
   const loadTransactions = async () => {
@@ -73,19 +78,28 @@ export default function HistoryTab() {
       <div className={styles.filters}>
         <button
           className={`${styles.filterBtn} ${filter === 'all' ? styles.active : ''}`}
-          onClick={() => setFilter('all')}
+          onClick={() => {
+            setFilter('all')
+            trackEvent('filter_transactions', { filter: 'all' })
+          }}
         >
           全部
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'expense' ? styles.active : ''}`}
-          onClick={() => setFilter('expense')}
+          onClick={() => {
+            setFilter('expense')
+            trackEvent('filter_transactions', { filter: 'expense' })
+          }}
         >
           支出
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'income' ? styles.active : ''}`}
-          onClick={() => setFilter('income')}
+          onClick={() => {
+            setFilter('income')
+            trackEvent('filter_transactions', { filter: 'income' })
+          }}
         >
           收入
         </button>
@@ -100,7 +114,18 @@ export default function HistoryTab() {
           </div>
         ) : (
           filteredTransactions.map((tx) => (
-            <Link key={tx.id} href={`/transactions/${tx.id}`} className={styles.transactionCard}>
+            <Link 
+              key={tx.id} 
+              href={`/transactions/${tx.id}`} 
+              className={styles.transactionCard}
+              onClick={() => {
+                trackEvent('view_transaction_detail', {
+                  transaction_id: tx.id,
+                  direction: tx.direction,
+                  amount: tx.amount,
+                })
+              }}
+            >
               <div className={styles.transactionHeader}>
                 <div className={styles.transactionMain}>
                   <div className={`${styles.transactionIcon} ${tx.direction === 'expense' ? styles.expense : styles.income}`}>

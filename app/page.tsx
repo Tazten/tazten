@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import UploadTab from '@/components/UploadTab'
 import HistoryTab from '@/components/HistoryTab'
 import styles from './page.module.css'
+import { trackEvent } from '@/lib/analytics'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upload' | 'history'>('upload')
@@ -15,9 +16,27 @@ export default function Home() {
       const tab = params.get('tab')
       if (tab === 'history') {
         setActiveTab('history')
+        // 追踪查看历史记录页面
+        trackEvent('page_view', {
+          page: 'history',
+        })
+      } else {
+        // 追踪首页浏览
+        trackEvent('page_view', {
+          page: 'home',
+        })
       }
     }
   }, [])
+
+  // 追踪标签切换
+  const handleTabChange = (tab: 'upload' | 'history') => {
+    setActiveTab(tab)
+    trackEvent('tab_switch', {
+      from: activeTab,
+      to: tab,
+    })
+  }
 
   return (
     <div className={styles.container}>
@@ -70,13 +89,13 @@ export default function Home() {
       <div className={styles.tabs}>
         <button 
           className={`${styles.tab} ${activeTab === 'upload' ? styles.active : ''}`}
-          onClick={() => setActiveTab('upload')}
+          onClick={() => handleTabChange('upload')}
         >
           上传账单
         </button>
         <button 
           className={`${styles.tab} ${activeTab === 'history' ? styles.active : ''}`}
-          onClick={() => setActiveTab('history')}
+          onClick={() => handleTabChange('history')}
         >
           历史记录
         </button>
