@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无感记账 - 飞书通知卡片对接说明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4CAF50;
+        }
+
+        .info-card {
+            background: #f9fafb;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-card h3 {
+            color: #4CAF50;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .info-card p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            color: #666;
+        }
+
+        .info-card li {
+            margin-bottom: 8px;
+        }
+
+        .step-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-card h3 {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .step-card p {
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .emoji {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 飞书通知卡片对接说明</h1>
+            <p class="subtitle">—— 让每一次记账都有通知提醒</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">一、什么是飞书通知？为什么要用它？</h2>
+                
+                <div class="info-card">
+                    <h3>💡 简单理解</h3>
+                    <p>飞书通知就像给你的记账系统装了一个"小助手"，每次有新的账单记录成功保存到数据库时，这个小助手就会自动给你发一条消息，告诉你："嘿，又有一笔新账单入库了！"</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎯 为什么要用？</h3>
+                    <p>想象一下，你正在开发一个记账系统：</p>
+                    <ul>
+                        <li><strong>没有通知</strong>：你只能手动打开数据库或网页，才能知道有没有新记录</li>
+                        <li><strong>有通知</strong>：每次入库，飞书自动弹出一条卡片消息，显示关键信息（金额、商户、分类等），一目了然</li>
+                    </ul>
+                    <p>这样你就能实时了解系统的运行情况，不用一直盯着数据库看了！</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">二、对接流程（超简单 5 步）</h2>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">1</span>
+                        <h3>创建飞书应用</h3>
+                    </div>
+                    <p>访问 <strong>https://open.feishu.cn/</strong>，登录后点击"创建企业自建应用"，填写应用名称（如：记账通知助手）。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">2</span>
+                        <h3>获取应用凭证</h3>
+                    </div>
+                    <p>在应用管理页面，进入"凭证与基础信息"，复制 <strong>App ID</strong> 和 <strong>App Secret</strong>（这两个就像应用的"身份证"）。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">3</span>
+                        <h3>配置权限</h3>
+                    </div>
+                    <p>进入"权限管理"，开启 <strong>im:message</strong>（发送消息）权限，保存并提交审核（企业自建应用通常自动通过）。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">4</span>
+                        <h3>获取接收者 ID</h3>
+                    </div>
+                    <p>确定消息要发给谁：</p>
+                    <ul>
+                        <li>发给<strong>自己</strong>：需要获取你的 <code>open_id</code>（可以通过飞书开发者工具查询）</li>
+                        <li>发给<strong>群聊</strong>：在群设置中查看群 ID（<code>chat_id</code>）</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">5</span>
+                        <h3>配置环境变量</h3>
+                    </div>
+                    <p>在项目的 <code>.env.local</code> 文件中添加：</p>
+                    <div class="code-block">
+                        <pre>FEISHU_APP_ID=你的AppID
+FEISHU_APP_SECRET=你的AppSecret
+FEISHU_RECEIVE_ID=你的接收者ID
+FEISHU_RECEIVE_ID_TYPE=open_id
+
+# 如果使用模板卡片（推荐）
+FEISHU_USE_TEMPLATE=true
+FEISHU_TEMPLATE_ID=你的模板ID
+FEISHU_TEMPLATE_VERSION=1.0.0</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">三、数据流转：从入库到通知</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>完整流程：</strong></p>
+                    <p>用户上传账单 → AI 识别 → 数据验证 → 保存到数据库 → <strong>自动发送飞书通知</strong> → 你在飞书收到卡片消息</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>📋 通知卡片包含的信息</h3>
+                    <ul>
+                        <li><strong>方向</strong>：支出 / 收入（带图标）</li>
+                        <li><strong>金额</strong>：交易金额和货币</li>
+                        <li><strong>商户</strong>：商户名称</li>
+                        <li><strong>分类</strong>：一级分类 / 二级分类</li>
+                        <li><strong>时间</strong>：交易发生时间（标准格式）</li>
+                        <li><strong>备注</strong>：账单备注信息</li>
+                        <li><strong>置信度</strong>：AI 识别准确度</li>
+                        <li><strong>颜色</strong>：支出=绿色，收入=红色（符合中国习惯）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">四、使用模板卡片（推荐）</h2>
+
+                <div class="info-card">
+                    <h3>🎨 什么是模板卡片？</h3>
+                    <p>模板卡片就像是一个"消息模板"，你可以在飞书卡片搭建工具中设计好样式，然后在代码中只需要填入数据，就能生成统一、美观的卡片消息。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-icon">📝</span>
+                        <h3>创建模板步骤</h3>
+                    </div>
+                    <p>1. 访问 <strong>https://open.feishu.cn/tool/cardbuilder</strong></p>
+                    <p>2. 点击"新建卡片"，设计你想要的样式</p>
+                    <p>3. 使用变量占位符，如 <code>${amount}</code>、<code>${merchant}</code>、<code>${color}</code> 等</p>
+                    <p>4. 保存模板，获取 <strong>template_id</strong> 和版本号</p>
+                    <p>5. 在环境变量中配置模板 ID</p>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>优势：</strong>样式统一、易于维护、可以在飞书 UI 中直接修改，无需改代码！</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">五、对接成果</h2>
+
+                <div class="info-card">
+                    <h3>✅ 实现效果</h3>
+                    <ul>
+                        <li>每次数据入库成功，自动发送飞书卡片通知</li>
+                        <li>卡片显示完整的账单信息，一目了然</li>
+                        <li>颜色区分支出和收入，符合中国用户习惯</li>
+                        <li>通知失败不影响主流程，系统稳定可靠</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>核心价值：</strong>让记账系统"会说话"，实时反馈运行状态，提升开发和使用体验！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>开发者：Tazten | WaytoAGI训练营作品展示</p>
+        </div>
+    </div>
+</body>
+</html>
+
