@@ -3,6 +3,7 @@ import { uploadImageToSupabase, generateObjectKey } from '@/lib/supabase/storage
 import { parseBillImage } from '@/lib/doubao/vision'
 import { supabaseServer } from '@/lib/supabase/server'
 import { validateCategory } from '@/lib/categories'
+import { sendFeishuNotification } from '@/lib/feishu/notify'
 import type { ParseAndSaveResponse, Transaction } from '@/lib/types'
 
 /**
@@ -275,6 +276,24 @@ export async function POST(request: NextRequest) {
         created_at: data.created_at,
         updated_at: data.updated_at
       }
+
+      // 发送飞书通知（异步，不阻塞主流程）
+      sendFeishuNotification({
+        id: savedRecord.id,
+        direction: savedRecord.direction,
+        amount: savedRecord.amount,
+        currency: savedRecord.currency,
+        merchant: savedRecord.merchant,
+        category: savedRecord.category,
+        subcategory: savedRecord.subcategory,
+        occurred_at: savedRecord.occurred_at,
+        note: savedRecord.note,
+        confidence: savedRecord.confidence,
+        created_at: savedRecord.created_at
+      }).catch(err => {
+        // 通知失败不影响主流程
+        console.error('飞书通知发送失败（不影响主流程）:', err)
+      })
 
       return NextResponse.json({
         status,

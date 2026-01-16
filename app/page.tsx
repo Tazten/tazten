@@ -54,7 +54,11 @@ export default function Home() {
         </div>
 
         <div className={styles.headerDescription}>
-          <p>本系统仅用于第二次作业展示，后续产品开发将使用 iPhone 快捷指令对接。Web 上传功能仅为更好地展示作业要求。</p>
+          <p>
+            本系统仅用作WaytoAGI训练营作品展示，后续产品开发将使用 iPhone 快捷指令对接。
+            <br />
+            Web 上传功能仅为更好地展示作业要求。
+          </p>
         </div>
 
         <div className={styles.headerInfo}>

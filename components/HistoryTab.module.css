@@ -104,13 +104,13 @@
 }
 
 .transactionIcon.expense {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .transactionIcon.income {
-  background: #d1fae5;
-  color: #065f46;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .transactionInfo {
@@ -155,11 +155,11 @@
 }
 
 .transactionAmount.expense {
-  color: #ef4444;
+  color: #10b981;
 }
 
 .transactionAmount.income {
-  color: #10b981;
+  color: #ef4444;
 }
 
 .emptyState {

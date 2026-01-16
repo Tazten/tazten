@@ -32,6 +32,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# 作业提交文档（不部署到生产环境）
-作业提交文档.html

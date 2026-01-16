@@ -87,11 +87,11 @@
 }
 
 .detailValue.expense {
-  color: #ef4444;
+  color: #10b981;
 }
 
 .detailValue.income {
-  color: #10b981;
+  color: #ef4444;
 }
 
 .imageSection {

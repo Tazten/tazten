@@ -26,3 +26,19 @@ DOUBAO_MODEL_ENDPOINT=ep-20260115161308-w22bh
 
 # 注意：BASE_URL 已硬编码为 https://ark.cn-beijing.volces.com/api/v3，无需配置
 
+# 飞书通知配置（可选）
+# 使用飞书 Open API 方式发送卡片消息
+FEISHU_APP_ID=你的AppID
+FEISHU_APP_SECRET=你的AppSecret
+FEISHU_RECEIVE_ID=你的群聊ID或用户ID（如：ou_7d8a6e6df7621556ce0d21922b676706ccs）
+FEISHU_RECEIVE_ID_TYPE=open_id  # 可选：chat_id、open_id、user_id，默认 open_id
+
+# 模板卡片配置（可选，如果使用模板卡片）
+# FEISHU_USE_TEMPLATE=true
+# FEISHU_TEMPLATE_ID=你的模板ID
+# FEISHU_TEMPLATE_VERSION=1.0.0
+# 
+# 参考文档：
+# - Open API: https://open.feishu.cn/document/server-docs/im-v1/message/create
+# - CardKit: https://open.feishu.cn/document/cardkit-v1/feishu-card-resource-overview
+
